@@ -1,7 +1,8 @@
 .node {
   width: 25px;
   height: 25px;
-  outline: 1px solid rgb(175, 216, 248);
+  margin-top: -5px;
+  border: .1px solid rgb(175, 216, 248);
   display: inline-block;
 }
 
@@ -48,10 +49,19 @@
 
 .node-wall {
   background-color: rgb(12, 53, 71);
+  user-select: none;
+  -webkit-user-select: none;
+	-webkit-user-drag: none;
+	-webkit-app-region: no-drag;
+	cursor: default;
 }
 
 .node-draggable {
   cursor: pointer;
+}
+
+.coursor-change {
+  cursor: crosshair;
 }
 
 .node-shortest-path {
@@ -66,8 +76,7 @@
 }
 
 .node-darker{
-  background: rgb(223, 217, 217);
-  border: 1px solid black;
+  border-radius: 5px;
 }
 
 @keyframes shortestPath {

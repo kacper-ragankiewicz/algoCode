@@ -16,6 +16,7 @@ export default class Node extends Component {
       onDragLeave,
       onDragEnd,
       eventDrag,
+      isErase,
       row,
     } = this.props;
     const extraClassName = isFinish
@@ -25,13 +26,14 @@ export default class Node extends Component {
       : isWall
       ? 'node-wall'
       : '';
-    // const onDraggingClass = eventDrag ? 'node-darker' : '';
+    const onDraggingClass = eventDrag ? 'node-darker' : '';
+    const onEraseClass = isErase ? "coursor-change" : '';
     const draggable = isStart || isFinish ? true : false;
     const draggClass = draggable ? 'node-draggable' : '';
     return (
       <div
         id={`node-${row}-${col}`}
-        className={`node ${extraClassName} ${draggClass}`}
+        className={`node ${extraClassName} ${draggClass} ${onDraggingClass} ${onEraseClass}`}
         onMouseDown={() => draggable ? false : onMouseDown(row, col)}
         onMouseEnter={() => draggable ? false : onMouseEnter(row, col)}
         onMouseUp={() => draggable ? false : onMouseUp()}

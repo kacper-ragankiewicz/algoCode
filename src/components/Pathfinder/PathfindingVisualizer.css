@@ -1,3 +1,11 @@
 .grid {
   margin: 100px 0 0;
+  user-select: none;
+  -webkit-user-select: none;
+	-webkit-user-drag: none;
+	-webkit-app-region: no-drag;
+	cursor: default;
+}
+.red {
+  background-color: red;
 }

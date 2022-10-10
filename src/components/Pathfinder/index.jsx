@@ -13,7 +13,9 @@ export default class PathfindingVisualizer extends Component {
       newCol: [],
       saveGrid: [],
       saveNumber: [],
+      isVisualized: false,
       isSaved: false,
+      isErase: false,
       mouseIsPressed: false,
       eventDrag: false,
       draggingStart: false,
@@ -31,7 +33,7 @@ export default class PathfindingVisualizer extends Component {
   }
 
   handleOnDragStart(row, col) {
-    this.setState({ eventDrag: true })
+    this.setState({ eventDrag: true, mouseIsPressed: false })
 
     if (this.state.START_NODE_ROW === row && this.state.START_NODE_COL === col ) {
       const newGrid = getNewGridWithStart(this.state.grid, this.state.START_NODE_ROW, this.state.START_NODE_COL);
@@ -70,12 +72,24 @@ export default class PathfindingVisualizer extends Component {
   }
 
   handleMouseDown(row, col) {
-    const newGrid = getNewGridWithWallToggled(this.state.grid, row, col);
-    this.setState({grid: newGrid, mouseIsPressed: true});
+    if(this.state.isErase) {
+      setTimeout(() => {
+        const newGrid = getNewGridWitErase(this.state.grid, row, col);
+        this.setState({grid: newGrid, mouseIsPressed: true});
+      }, 10);
+      return;
+    }
+    setTimeout(() => {
+      const newGrid = getNewGridWithWallToggled(this.state.grid, row, col);
+      this.setState({grid: newGrid, mouseIsPressed: true});
+    }, 10);
+    return;
+
   }
 
   handleMouseEnter(row, col) {
     if (!this.state.mouseIsPressed) return;
+    if (this.state.isErase) return;
     const newGrid = getNewGridWithWallToggled(this.state.grid, row, col);
     this.setState({grid: newGrid});
   }
@@ -110,9 +124,7 @@ export default class PathfindingVisualizer extends Component {
     }
   }
 
-
-
-  handleRestor() {
+  handleRestor(grid) {
     if (this.state.isSaved) {
       const gridRestore = []
       for(let row = 0; row < 20; row++ ) {
@@ -135,19 +147,31 @@ export default class PathfindingVisualizer extends Component {
   handleSaveGrid() {
     this.state.saveNumber.push(this.state.saveNumber.length + 1)
     const actualGrid = this.state.grid
-    this.setState({ saveGrid: actualGrid, isSaved: true });
+    this.setState({ saveGrid: actualGrid, isSaved: true }, () => {
+      this.handleRestor();
+    });
     // this.handleRestor();
-    setTimeout(() => {
-        this.handleRestor();
-      }, 10);
-}
-
-  handleRestart() {
-    const grid = this.getInitialGrid();
-    this.setState({grid});
   }
 
+  handleRestart() {
+    if (this.state.isVisualized) {
+      return window.location.reload(false);
+    }
+      this.setState({
+        START_NODE_ROW: 10,
+        START_NODE_COL: 5,
+        FINISH_NODE_ROW: 10,
+        FINISH_NODE_COL: 25,
+      }, () => {
+        const grid = this.getInitialGrid();
+        return this.setState({grid});
+      })
+  }
+
+
+
   visualizeDijkstra() {
+    this.setState({ isVisualized: true })
     const {grid} = this.state;
     const startNode = grid[this.state.START_NODE_ROW][this.state.START_NODE_COL];
     const finishNode = grid[this.state.FINISH_NODE_ROW][this.state.FINISH_NODE_COL];
@@ -168,8 +192,8 @@ export default class PathfindingVisualizer extends Component {
     }
     return grid;
   };
-  
-  createNode(col, row, isWall, isStart, isFinish) {
+
+  createNode(col, row, isWall) {
     return {
       col,
       row,
@@ -190,13 +214,14 @@ export default class PathfindingVisualizer extends Component {
         <button onClick={() => this.visualizeDijkstra()}>
           Visualize Dijkstra's Algorithm
         </button>
-        {this.state.isSaved && <button onClick={() => this.handleRestor()}>Ctrl + Z</button>}
+        {this.state.isSaved && <button onClick={() => this.handleRestor(this.state.saveGrid)}>Ctrl + Z</button>}
+        <button className={this.state.isErase ? 'red' : ''}onClick={() => this.setState({ isErase: !this.state.isErase })}>Erase</button>
         <button onClick={() => this.handleSaveGrid()}>Save: {this.state.saveNumber.length}</button>
-        <button onClick={() => this.handleRestart()}>Restart</button>
-        <div className="grid">
+        <button onClick={() => this.handleRestart()}>Reset</button>
+        <div className="grid" draggable="false" onMouseLeave={() => this.handleMouseUp()} onMouseDown={() => this.handleSaveGrid()}>
           {grid.map((row, rowIdx) => {
             return (
-              <div key={rowIdx}>
+              <div key={rowIdx} draggable="false">
                 {row.map((node, nodeIdx) => {
                   const {row, col, isFinish, isStart, isWall} = node;
                   return (
@@ -215,6 +240,7 @@ export default class PathfindingVisualizer extends Component {
                       onDragLeave={(row, col) => this.handleOnDropLeave(row, col)}
                       onDragEnd={(row, col) => this.handleOnDragEnd(row ,col)}
                       eventDrag={this.state.eventDrag}
+                      isErase={this.state.isErase}
                       // onDrop={(row ,col) => this.handleOnDrop(row, col)}
                       onMouseUp={() => this.handleMouseUp()}
                       row={row}></Node>
@@ -235,7 +261,7 @@ const getNewGridWithStart = (grid, row, col) => {
   const newNode = {
     ...node,
     isStart: !node.isStart,
-    isWall: node.isWall ? false : false,
+    isWall: false,
   };
   newGrid[row][col] = newNode;
   return newGrid;
@@ -247,7 +273,7 @@ const getNewGridWithFinish = (grid, row, col) => {
   const newNode = {
     ...node,
     isFinish: !node.isFinish,
-    isWall: node.isWall ? false : false,
+    isWall: false,
   };
   newGrid[row][col] = newNode;
   return newGrid;
@@ -259,7 +285,18 @@ const getNewGridWithWallToggled = (grid, row, col) => {
   const node = newGrid[row][col];
   const newNode = {
     ...node,
-    isWall: !node.isWall,
+    isWall: node.isWall ? true : true,
+  };
+  newGrid[row][col] = newNode;
+  return newGrid;
+};
+
+const getNewGridWitErase = (grid, row, col) => {
+  const newGrid = grid.slice();
+  const node = newGrid[row][col];
+  const newNode = {
+    ...node,
+    isWall: node.isWall ? false : false,
   };
   newGrid[row][col] = newNode;
   return newGrid;
