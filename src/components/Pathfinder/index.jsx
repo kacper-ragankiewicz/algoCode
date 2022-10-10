@@ -24,6 +24,8 @@ export default class PathfindingVisualizer extends Component {
       START_NODE_COL: 5,
       FINISH_NODE_ROW: 10,
       FINISH_NODE_COL: 25,
+      maxRows: 20,
+      maxCols: 30,
     };
   }
 
@@ -127,9 +129,9 @@ export default class PathfindingVisualizer extends Component {
   handleRestor(grid) {
     if (this.state.isSaved) {
       const gridRestore = []
-      for(let row = 0; row < 20; row++ ) {
+      for(let row = 0; row < this.state.maxRows; row++ ) {
         const currentRow = []
-        for (let col = 0; col < 30; col++) {
+        for (let col = 0; col < this.state.maxCols; col++) {
           currentRow.push(
             this.createNode(
               this.state.saveGrid[row][col].col,
@@ -182,9 +184,9 @@ export default class PathfindingVisualizer extends Component {
 
   getInitialGrid() {
     const grid = [];
-    for (let row = 0; row < 20; row++) {
+    for (let row = 0; row < this.state.maxRows; row++) {
       const currentRow = [];
-      for (let col = 0; col < 30
+      for (let col = 0; col < this.state.maxCols
         ; col++) {
         currentRow.push(this.createNode(col, row));
       }
@@ -210,14 +212,14 @@ export default class PathfindingVisualizer extends Component {
     const {grid, mouseIsPressed} = this.state;
 
     return (
-      <>
-        <button onClick={() => this.visualizeDijkstra()}>
+      <div className='container'>
+        <button className='button' onClick={() => this.visualizeDijkstra()}>
           Visualize Dijkstra's Algorithm
         </button>
-        {this.state.isSaved && <button onClick={() => this.handleRestor(this.state.saveGrid)}>Ctrl + Z</button>}
-        <button className={this.state.isErase ? 'red' : ''}onClick={() => this.setState({ isErase: !this.state.isErase })}>Erase</button>
-        <button onClick={() => this.handleSaveGrid()}>Save: {this.state.saveNumber.length}</button>
-        <button onClick={() => this.handleRestart()}>Reset</button>
+        {this.state.isSaved && <button className='button' onClick={() => this.handleRestor(this.state.saveGrid)}>Ctrl + Z</button>}
+        <button className={` button ${this.state.isErase ? 'red' : ''}`}onClick={() => this.setState({ isErase: !this.state.isErase })}>Erase</button>
+        <button className='button' onClick={() => this.handleSaveGrid()}>Save: {this.state.saveNumber.length}</button>
+        <button className='button' onClick={() => this.handleRestart()}>Reset</button>
         <div className="grid" draggable="false" onMouseLeave={() => this.handleMouseUp()} onMouseDown={() => this.handleSaveGrid()}>
           {grid.map((row, rowIdx) => {
             return (
@@ -250,7 +252,7 @@ export default class PathfindingVisualizer extends Component {
             );
           })}
         </div>
-      </>
+      </div>
     );
   }
 }

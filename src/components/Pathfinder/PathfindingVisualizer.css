@@ -1,3 +1,20 @@
+.container {
+  padding: 30px;
+}
+.button {
+  background-color: green;
+  border: 0;
+  padding: 15px 30px 15px 30px;
+  margin: 10px;
+  border-radius: 15px;
+  color: white;
+  cursor: pointer;
+  transition: .2s;
+}
+.button:hover {
+  background-color: rgb(84, 131, 14);
+}
+
 .grid {
   margin: 100px 0 0;
   user-select: none;
