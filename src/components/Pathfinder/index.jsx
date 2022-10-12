@@ -216,7 +216,7 @@ export default class PathfindingVisualizer extends Component {
         <button className='button' onClick={() => this.visualizeDijkstra()}>
           Visualize Dijkstra's Algorithm
         </button>
-        {this.state.isSaved && <button className='button' onClick={() => this.handleRestor(this.state.saveGrid)}>Ctrl + Z</button>}
+        {this.state.isSaved && <button className='button restore' onClick={() => this.handleRestor(this.state.saveGrid)}>Ctrl + Z</button>}
         <button className={` button ${this.state.isErase ? 'red' : ''}`}onClick={() => this.setState({ isErase: !this.state.isErase })}>Erase</button>
         <button className='button' onClick={() => this.handleSaveGrid()}>Save: {this.state.saveNumber.length}</button>
         <button className='button' onClick={() => this.handleRestart()}>Reset</button>

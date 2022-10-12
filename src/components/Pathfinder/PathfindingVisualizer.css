@@ -10,9 +10,14 @@
   color: white;
   cursor: pointer;
   transition: .2s;
+  border: 3px solid rgb(119, 187, 136);
 }
 .button:hover {
   background-color: rgb(84, 131, 14);
+}
+
+.restore {
+  background-color: rgb(63, 63, 226);
 }
 
 .grid {
