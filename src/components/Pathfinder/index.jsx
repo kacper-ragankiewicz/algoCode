@@ -73,6 +73,10 @@ export default class PathfindingVisualizer extends Component {
     }
   }
 
+  handleOnDragOver(row, col) {
+    console.log(`on item ${row}, ${col}`)
+  }
+
   handleMouseDown(row, col) {
     if(this.state.isErase) {
       setTimeout(() => {
@@ -241,6 +245,7 @@ export default class PathfindingVisualizer extends Component {
                       onDragStart={(row, col) => this.handleOnDragStart(row, col)}
                       onDragLeave={(row, col) => this.handleOnDropLeave(row, col)}
                       onDragEnd={(row, col) => this.handleOnDragEnd(row ,col)}
+                      onDragOver={(row, col) => this.handleOnDragOver(row, col)}
                       eventDrag={this.state.eventDrag}
                       isErase={this.state.isErase}
                       // onDrop={(row ,col) => this.handleOnDrop(row, col)}

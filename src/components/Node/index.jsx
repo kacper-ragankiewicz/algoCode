@@ -15,6 +15,7 @@ export default class Node extends Component {
       onDragStart,
       onDragLeave,
       onDragEnd,
+      onDragOver,
       eventDrag,
       isErase,
       row,
@@ -37,6 +38,7 @@ export default class Node extends Component {
         onMouseDown={() => draggable ? false : onMouseDown(row, col)}
         onMouseEnter={() => draggable ? false : onMouseEnter(row, col)}
         onMouseUp={() => draggable ? false : onMouseUp()}
+        onDragOver={() => eventDrag ? onDragOver(row, col) : false}
         onDragStart={() => onDragStart(row, col)}
         onDragLeave={() => onDragLeave(row,col)}
         onDragEnd={() => onDragEnd(row, col)}
