@@ -1,6 +1,7 @@
 ## Available Scripts
 
-Project running on node ^16.0.0
+Project running on node ^16.0.0...
+
 In the project directory, you can run:
 
 ### `npm install`
