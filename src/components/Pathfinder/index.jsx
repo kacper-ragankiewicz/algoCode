@@ -74,7 +74,7 @@ export default class PathfindingVisualizer extends Component {
   }
 
   handleOnDragOver(row, col) {
-    console.log(`on item ${row}, ${col}`)
+    console.log(`on item ${row}, ${col} :)`)
   }
 
   handleMouseDown(row, col) {
@@ -173,8 +173,6 @@ export default class PathfindingVisualizer extends Component {
         return this.setState({grid});
       })
   }
-
-
 
   visualizeDijkstra() {
     this.setState({ isVisualized: true })
